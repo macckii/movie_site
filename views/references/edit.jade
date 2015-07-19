@@ -1,24 +1,24 @@
 extends ../layout
 
 block content
-  h1= title
-  form#formAddReference(name="updatereference", method="POST", action="/references/#{reference._id}?_method=PUT")
-    input#inputRefName(type="text", placeholder="reference name", name="refName", value="#{reference.refName}")
+  h1 Edit Reference
+  form(name="updatereference", method="POST", action="/references/#{reference._id}?_method=PUT")
+    input(type="text", placeholder="reference name", name="name", value="#{reference.name}")
     br
     br
-    - aaaa = ('1'==reference.refType)?'selected' : null;
-    - bbbb = ('2'==reference.refType)?'selected' : null;
-    - cccc = ('3'==reference.refType)?'selected' : null;
-    - dddd = ('4'==reference.refType)?'selected' : null;
-    select#selectRefType(name="refType")
+    - aaaa = ('1' == reference.category) ? 'selected' : null;
+    - bbbb = ('2' == reference.category) ? 'selected' : null;
+    - cccc = ('3' == reference.category) ? 'selected' : null;
+    - dddd = ('4' == reference.category) ? 'selected' : null;
+    select(name="category")
       option(value="1", selected=aaaa) aaaa
       option(value="2", selected=bbbb) bbbb
       option(value="3", selected=cccc) cccc
       option(value="4", selected=dddd) dddd
     br
     br
-    textarea#textareaDescription(rows="10", cols="70", placeholder="description", name="description")
+    textarea(rows="10", cols="70", placeholder="description", name="description")
       = reference.description
     br
     br
-    button#btnSubmit(type="submit") submit
+    button(type="submit") submit

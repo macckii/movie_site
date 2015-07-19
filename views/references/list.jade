@@ -1,8 +1,8 @@
 extends ../layout
 
 block content
-  h1= title
+  h1 References
   ul
     each ref, i in references
       li
-        a(href="#{ref._id}")= ref.refName
+        a(href="#{ref._id}")= ref.name

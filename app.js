@@ -1,22 +1,26 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+// dependencies
+var express        = require('express');
+var path           = require('path');
+var favicon        = require('serve-favicon');
+var logger         = require('morgan');
+var cookieParser   = require('cookie-parser');
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override')
 
+// db
 var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/movie_site');
+var monk  = require('monk');
+var db    = monk('localhost:27017/movie_site');
 
-var routes = require('./routes/index');
-var movies = require('./routes/movies');
+// routes
+var home       = require('./routes/index');
 var references = require('./routes/references');
-var users = require('./routes/users');
+var users      = require('./routes/users');
 
+
+// app
 var app = express();
 
-var methodOverride = require('method-override')
 app.use(methodOverride('_method'));
 
 // view engine setup
@@ -37,8 +41,7 @@ app.use(function(req, res, next){
   next();
 });
 
-app.use('/', routes);
-app.use('/movies', movies);
+app.use('/', home);
 app.use('/references', references);
 app.use('/users', users);
 

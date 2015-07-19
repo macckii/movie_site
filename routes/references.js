@@ -1,106 +1,77 @@
 var express = require('express');
-var router = express.Router();
+var router  = express.Router();
 
-/* GET Adding Reference page. */
+
+/* GET list */
+router.get('/', function(req, res) {
+  _getCollection(req).find({}, {}, function(e, docs){
+    res.render('references/list', { references : docs });
+  })
+});
+
+
+/* GET new */
 router.get('/new', function(req, res) {
-  res.render('references/new', { title: 'Add Reference' });
+  res.render('references/new');
 });
 
-/* Showing a reference page. */
-router.get('/:id', function(req, res) {
-  var db = req.db;
-  
-  var collection = db.get('reference');
-  
-  console.log("Show params %s", req.params.id);
-  
-  collection.findById(req.params.id, function(err, doc) {
-    res.render('references/show', { reference: doc });
-  });
- 
-});
-
-/* POST to Add Reference */
-router.post('/', function(req, res) {
-  // Set internal DB variable
-  var db = req.db
-  
-  // Get form values. These rely on the "name" attributes
-  var refName = req.body.refName;
-  var refType = req.body.refType;
-  var description = req.body.description;
-  
-  // Set collection
-  var collection = db.get('reference');
-  
-  // Submit to the DB
-  collection.insert({
-    "refName" : refName,
-    "refType" : refType,
-    "description" : description
-  }, function (err, doc) {
-    if (err) {
-      // If it failed, return error
+/* POST create */
+router.post('/', function(req, res) {  
+  var payload = {
+    name        : req.body.name,
+    category    : req.body.category,
+    description : req.body.description,
+  };
+    
+  _getCollection(req).insert(payload, function (err, doc) {
+    if (err) {      
       res.send("There was a problem adding the information to the database.");
-    }
-    else {
-      // And forward to success page
+    } else {      
       res.redirect("/references/" + doc._id);
     }
   });
 });
 
-/* GET reference list page. */
-router.get('/', function(req, res) {
-  var db = req.db;
-  var collection = db.get('reference');
-  collection.find({}, {}, function(e, docs){
-    res.render('references/list', {
-      references : docs,
-      title: 'Reference List'
-    });
-  })
+
+/* GET show */
+router.get('/:id', function(req, res) {
+  _getCollection(req).findById(req.params.id, function(err, doc) {
+    res.render('references/show', { reference: doc });
+  });
+ 
 });
 
-/* GET reference edit page. */
+
+/* GET edit */
 router.get('/:id/edit', function(req, res) {
-    var db = req.db;
-    var collection = db.get('reference');
-    collection.findById(req.params.id, function(err, doc) {
-        res.render('references/edit', {reference: doc, title: 'Edit page'});
+    _getCollection(req).findById(req.params.id, function(err, doc) {
+        res.render('references/edit', { reference: doc });
     });
 });
 
-/* PUT from Edit page. */
+/* PUT update */
 router.put('/:id', function(req, res) {
-  // Set internal DB variable
-  var db = req.db
-  
-  // Get form values. These rely on the "name" attributes
-  var refName = req.body.refName;
-  var refType = req.body.refType;
-  var description = req.body.description;
-  
-  // Set collection
-  var collection = db.get('reference');
-  
   var id = req.params.id;
+  
+  var payload = {
+    name        : req.body.name,
+    category    : req.body.category,
+    description : req.body.description  
+  };
 
-  // Submit to the DB
-  collection.updateById(id, {
-    "refName"     : refName,
-    "refType"     : refType,
-    "description" : description
-  }, function (err) {
+  _getCollection(req).updateById(id, payload, function(err) {
     if (err) {
-      // If it failed, return error
       res.send("There was a problem adding the information to the database.");
-    }
-    else {
-      // And forward to success page
-      res.redirect("/references/" + id);
+    } else {
+      res.redirect('/references/' + id);
     }
   });
 });
+
+
+function _getCollection(req) {
+    return req.db.get('references');
+}
+
 
 module.exports = router;
