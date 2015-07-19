@@ -2,6 +2,14 @@ var express = require('express');
 var router  = express.Router();
 
 
+
+function Reference(name, category, description) {
+    this.name        = name        || "";
+    this.category    = category    || "";
+    this.description = description || "";
+}
+
+
 /* GET list */
 router.get('/', function(req, res) {
   _getCollection(req).find({}, {}, function(e, docs){
@@ -12,7 +20,11 @@ router.get('/', function(req, res) {
 
 /* GET new */
 router.get('/new', function(req, res) {
-  res.render('references/new');
+  res.render('references/form', {
+      title     : 'New Reference',
+      action    : '/references',
+      reference : new Reference(),
+  });
 });
 
 /* POST create */
@@ -45,7 +57,11 @@ router.get('/:id', function(req, res) {
 /* GET edit */
 router.get('/:id/edit', function(req, res) {
     _getCollection(req).findById(req.params.id, function(err, doc) {
-        res.render('references/edit', { reference: doc });
+        res.render('references/form', { 
+            reference : doc,
+            title     : 'Edit ' + doc.name,
+            action    : '/references/' + doc._id + '?_method=PUT'
+        });
     });
 });
 
