@@ -8,10 +8,11 @@ router.get('/new', function(req, res) {
 
 /* Showing a reference page. */
 router.get('/:id', function(req, res) {
-  console.log("SHOW ROUTE!!!!")
   var db = req.db;
   
   var collection = db.get('reference');
+  
+  console.log("Show params %s", req.params.id);
   
   collection.findById(req.params.id, function(err, doc) {
     res.render('references/show', { reference: doc });
@@ -72,33 +73,32 @@ router.get('/:id/edit', function(req, res) {
 
 /* PUT from Edit page. */
 router.put('/:id', function(req, res) {
-  console.log("HAPPENING!!!!!!!!!!!!!!!!!!!!11")
   // Set internal DB variable
   var db = req.db
   
   // Get form values. These rely on the "name" attributes
-  console.log(req.body);
-  console.log(req.params);
   var refName = req.body.refName;
   var refType = req.body.refType;
   var description = req.body.description;
   
   // Set collection
   var collection = db.get('reference');
+  
+  var id = req.params.id;
 
   // Submit to the DB
-  collection.updateById(req.params.id, {
+  collection.updateById(id, {
     "refName"     : refName,
     "refType"     : refType,
     "description" : description
-  }, function (err, doc) {
+  }, function (err) {
     if (err) {
       // If it failed, return error
       res.send("There was a problem adding the information to the database.");
     }
     else {
       // And forward to success page
-      res.redirect("/references/show" + doc._id);
+      res.redirect("/references/" + id);
     }
   });
 });

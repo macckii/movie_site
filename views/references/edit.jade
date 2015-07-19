@@ -2,8 +2,7 @@ extends ../layout
 
 block content
   h1= title
-  form#formAddReference(name="updatereference", method="post", action="/references/#{reference._id}")
-    input(type="hidden" name="_method" value="PUT")
+  form#formAddReference(name="updatereference", method="POST", action="/references/#{reference._id}?_method=PUT")
     input#inputRefName(type="text", placeholder="reference name", name="refName", value="#{reference.refName}")
     br
     br
