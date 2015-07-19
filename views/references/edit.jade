@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  h1= title
+  form#formAddReference(name="updatereference", method="post", action="/references/#{reference._id}")
+    input(type="hidden" name="_method" value="PUT")
+    input#inputRefName(type="text", placeholder="reference name", name="refName", value="#{reference.refName}")
+    br
+    br
+    - aaaa = ('1'==reference.refType)?'selected' : null;
+    - bbbb = ('2'==reference.refType)?'selected' : null;
+    - cccc = ('3'==reference.refType)?'selected' : null;
+    - dddd = ('4'==reference.refType)?'selected' : null;
+    select#selectRefType(name="refType")
+      option(value="1", selected=aaaa) aaaa
+      option(value="2", selected=bbbb) bbbb
+      option(value="3", selected=cccc) cccc
+      option(value="4", selected=dddd) dddd
+    br
+    br
+    textarea#textareaDescription(rows="10", cols="70", placeholder="description", name="description")
+      = reference.description
+    br
+    br
+    button#btnSubmit(type="submit") submit

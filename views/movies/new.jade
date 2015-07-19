@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+  h1= title
+  form#formAddMovie(name="createmovie", method="post", action="/movies")
+    input#inputMovieTitle(type="text", placeholder="movie title", name="movietitle")
+    br
+    br
+    textarea#textareaMovieDescription(rows="10", cols="70", placeholder="description", name="description")
+    br
+    br
+    button#btnSubmit(type="submit") submit

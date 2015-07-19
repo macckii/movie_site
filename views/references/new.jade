@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h1= title
+  form#formAddReference(name="createreference", method="post", action="/references")
+    input#inputRefName(type="text", placeholder="reference name", name="refName")
+    br
+    br
+    select#selectRefType(name="refType")
+      option(value="1") aaaa
+      option(value="2") bbbb
+      option(value="3") cccc
+      option(value="4") dddd
+    br
+    br
+    textarea#textareaDescription(rows="10", cols="70", placeholder="description", name="description")
+    br
+    br
+    button#btnSubmit(type="submit") submit

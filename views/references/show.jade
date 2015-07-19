@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  h1= reference.refName
+  p= reference.refType
+  p= reference.description
+  
+  a(href="#{reference._id}/edit") Edit
