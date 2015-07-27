@@ -8,12 +8,11 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override')
 
 // db
-var mongo = require('mongodb');
-var monk  = require('monk');
-var db    = monk('localhost:27017/movie_site');
+var mongo    = require('mongodb');
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/movie_site');
 
-// aithentication
-var mongoose      = require('mongoose');
+// authentication
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -47,12 +46,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Make db accessible to router
-app.use(function(req, res, next){
-  req.db = db;
-  next();
-});
-
 app.use('/', home);
 app.use('/references', references);
 app.use('/users', users);
@@ -62,9 +55,6 @@ var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
-
-// mongoose
-mongoose.connect('mongodb://localhost/user')
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

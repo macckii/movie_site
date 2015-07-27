@@ -1,18 +1,11 @@
-var express = require('express');
-var router  = express.Router();
-
-
-
-function Reference(name, category, description) {
-    this.name        = name        || "";
-    this.category    = category    || "";
-    this.description = description || "";
-}
+var express   = require('express');
+var router    = express.Router();
+var Reference = require('../models/reference');
 
 
 /* GET list */
 router.get('/', function(req, res) {
-  _getCollection(req).find({}, {}, function(e, docs){
+  Reference.find({}, function(err, docs){
     res.render('references/list', { references : docs });
   })
 });
@@ -29,13 +22,7 @@ router.get('/new', function(req, res) {
 
 /* POST create */
 router.post('/', function(req, res) {  
-  var payload = {
-    name        : req.body.name,
-    category    : req.body.category,
-    description : req.body.description,
-  };
-    
-  _getCollection(req).insert(payload, function (err, doc) {
+  Reference.create(req.body, function (err, doc) {
     if (err) {      
       res.send("There was a problem adding the information to the database.");
     } else {      
@@ -47,7 +34,7 @@ router.post('/', function(req, res) {
 
 /* GET show */
 router.get('/:id', function(req, res) {
-  _getCollection(req).findById(req.params.id, function(err, doc) {
+  Reference.findById(req.params.id, function(err, doc) {
     res.render('references/show', { reference: doc });
   });
  
@@ -56,7 +43,7 @@ router.get('/:id', function(req, res) {
 
 /* GET edit */
 router.get('/:id/edit', function(req, res) {
-    _getCollection(req).findById(req.params.id, function(err, doc) {
+    Reference.findById(req.params.id, function(err, doc) {
         res.render('references/form', { 
             reference : doc,
             title     : 'Edit ' + doc.name,
@@ -68,14 +55,8 @@ router.get('/:id/edit', function(req, res) {
 /* PUT update */
 router.put('/:id', function(req, res) {
   var id = req.params.id;
-  
-  var payload = {
-    name        : req.body.name,
-    category    : req.body.category,
-    description : req.body.description  
-  };
 
-  _getCollection(req).updateById(id, payload, function(err) {
+  Reference.findByIdAndUpdate(id, req.body, function(err) {
     if (err) {
       res.send("There was a problem adding the information to the database.");
     } else {
@@ -83,11 +64,6 @@ router.put('/:id', function(req, res) {
     }
   });
 });
-
-
-function _getCollection(req) {
-    return req.db.get('references');
-}
 
 
 module.exports = router;
