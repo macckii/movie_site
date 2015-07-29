@@ -1,18 +1,21 @@
 var express   = require('express');
 var router    = express.Router();
 var Reference = require('../models/reference');
+var passport  = require('passport');
+var protect   = require('./utils')['protect'];
 
 
 /* GET list */
 router.get('/', function(req, res) {
   Reference.find({}, function(err, docs){
     res.render('references/list', { references : docs });
-  })
+  });
+
 });
 
 
 /* GET new */
-router.get('/new', function(req, res) {
+router.get('/new', protect, function(req, res) {
   res.render('references/form', {
       title     : 'New Reference',
       action    : '/references',
