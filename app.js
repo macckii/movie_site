@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost/movie_site');
 
 // authentication
 var passport      = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var BasicStrategy = require('passport-http').Strategy;
 
 // routes
 var home       = require('./routes/index');
@@ -46,15 +46,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', home);
-app.use('/references', references);
-app.use('/users', users);
-
 // passport config
 var Account = require('./models/account');
-passport.use(new LocalStrategy(Account.authenticate()));
+passport.use(new BasicStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
+
+app.use('/', home);
+// app.use('/references', passport.authenticate('local'), references.protected);
+app.use('/references', references);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
