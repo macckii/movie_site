@@ -24,7 +24,7 @@ router.get('/new', protect, function(req, res) {
 });
 
 /* POST create */
-router.post('/', function(req, res) {  
+router.post('/', protect, function(req, res) {  
   Reference.create(req.body, function (err, doc) {
     if (err) {      
       res.send("There was a problem adding the information to the database.");
@@ -45,7 +45,7 @@ router.get('/:id', function(req, res) {
 
 
 /* GET edit */
-router.get('/:id/edit', function(req, res) {
+router.get('/:id/edit', protect, function(req, res) {
     Reference.findById(req.params.id, function(err, doc) {
         res.render('references/form', { 
             reference : doc,
@@ -56,7 +56,7 @@ router.get('/:id/edit', function(req, res) {
 });
 
 /* PUT update */
-router.put('/:id', function(req, res) {
+router.put('/:id', protect, function(req, res) {
   var id = req.params.id;
 
   Reference.findByIdAndUpdate(id, req.body, function(err) {

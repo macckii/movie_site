@@ -4,7 +4,7 @@ var Schema   = mongoose.Schema;
 var Reference = new Schema({
 	name        : String,
     category    : Number,
-	movieTitle  : String,
+	title       : String,
     description : String,
 });
 
